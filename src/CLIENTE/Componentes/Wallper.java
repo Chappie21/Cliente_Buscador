@@ -1,4 +1,4 @@
-package Componentes;
+package CLIENTE.Componentes;
 
 import java.awt.Image;
 import javax.swing.Icon;

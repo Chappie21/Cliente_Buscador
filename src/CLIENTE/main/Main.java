@@ -1,6 +1,6 @@
-package main;
+package CLIENTE.main;
 
-import UI.principal;
+import CLIENTE.UI.principal;
 
 public class Main{
 

@@ -1,9 +1,5 @@
-package Componentes;
+package CLIENTE.Componentes;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import com.placeholder.PlaceHolder;
 
@@ -13,5 +9,7 @@ public class Ctext extends JTextField{
 	public Ctext(String mensaje) {
 		this.setOpaque(false);
 		PlaceHolder placeholder = new PlaceHolder(this, mensaje);/*MENSAJE TRASLUCIDO*/
+		placeholder.setFont("Arial");
+		placeholder.setSize(20);
 	}
 }
