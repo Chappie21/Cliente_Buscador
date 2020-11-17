@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 
 public class principal extends JFrame implements ActionListener{
 
@@ -74,6 +75,18 @@ public class principal extends JFrame implements ActionListener{
             this.out = new DataOutputStream(so.getOutputStream());
             this.out.writeUTF(busq.getText());
 
+            this.input = new DataInputStream(so.getInputStream());
+
+            byte datos[] = this.input.readAllBytes();
+
+            FileOutputStream salida = new FileOutputStream("C:/Users/chapp/OneDrive/Escritorio/que_hace_copia.pdf");
+
+            for(int i=0; i<datos.length;i++){
+                salida.write(datos[i]);
+            }
+
+            salida.close();
+            this.input.close();
             this.out.close();
        }catch(IOException e){
             System.out.println("Cliente ERROR: "+e.getMessage());

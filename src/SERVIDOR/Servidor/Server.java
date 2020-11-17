@@ -3,23 +3,28 @@ package SERVIDOR.Servidor;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
+
 import SERVIDOR.UI.*;
 
-public class Server implements Runnable{
-    
-     //INSTANCIA CON LA CLASE "ServerVista"
-    private ServerVista ventana = ServerVista.getInstancia();
+public class Server implements Runnable {
 
-    //ATRIBUTOS DEL SERVIDOR
-    private ServerSocket server;
-    private Socket so;
-    private DataOutputStream out;
-    private DataInputStream input;
-    private String data;
+     // INSTANCIA CON LA CLASE "ServerVista"
+     private ServerVista ventana = ServerVista.getInstancia();
 
-    //CONSTRUCTOR VACIO         
+     // ATRIBUTOS DEL SERVIDOR
+     private ServerSocket server;
+     private Socket so;
+     private DataOutputStream out;
+     private DataInputStream input;
+     private String data;
+
+     // CONSTRUCTOR VACIO
     public Server(){
 
           try{ 
@@ -32,11 +37,12 @@ public class Server implements Runnable{
                     
                     this.data = input.readUTF();
                     
+                    this.ventana.setConsola("Cliente pide archivo: "+data);
+
                     //CREA UN HILO INICIANDO LA OPERACIOND BUSQUEDA
                     Thread hilo = new Thread(this);
                     hilo.start();
 
-                    this.so.close();
                 }
 
           }catch(IOException e){
@@ -53,7 +59,28 @@ public class Server implements Runnable{
     //METODO RUN
     @Override
     public void run(){
-          this.ventana.setConsola(data);
+          
+          File archivo = new File(data);
+
+          if(archivo.exists()){
+               this.ventana.setConsola("Existe");
+
+               try {
+                    FileInputStream archivodata = new FileInputStream(archivo);
+
+                    this.out = new DataOutputStream(so.getOutputStream());
+
+                    this.out.write(archivodata.readAllBytes());
+
+                    this.out.close();
+                    this.so.close();
+               } catch (IOException e) {
+                    e.printStackTrace();
+               }
+
+
+          }
+
     }
 
 }
