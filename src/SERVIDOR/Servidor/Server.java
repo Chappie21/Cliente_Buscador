@@ -34,10 +34,10 @@ public class Server implements Runnable {
                 while(true){
                     this.so =  this.server.accept(); 
                     this.input = new DataInputStream(so.getInputStream());
-                    
+                   
                     this.data = input.readUTF();
                     
-                    this.ventana.setConsola("Cliente pide archivo: "+data);
+                    this.ventana.setConsola("#Cliente pide archivo: "+data);
 
                     //CREA UN HILO INICIANDO LA OPERACIOND BUSQUEDA
                     Thread hilo = new Thread(this);
@@ -46,7 +46,7 @@ public class Server implements Runnable {
                 }
 
           }catch(IOException e){
-               System.out.println("Error en server: "+e.getMessage());/*EN CASO DE ERROR*/
+               this.ventana.setConsola("->Sistema ERROR: "+e.getMessage());/*EN CASO DE ERROR*/
           }finally{
                try {
                     this.server.close();
@@ -56,6 +56,25 @@ public class Server implements Runnable {
           }
     }
 
+    private void enviar(byte datos[]){
+         try{ 
+               this.out = new DataOutputStream(so.getOutputStream());
+
+              if(datos != null){
+                    this.out.writeBoolean(true);
+                    this.out.write(datos);
+              }else{
+                    this.out.writeBoolean(false);
+              }
+
+               this.ventana.setConsola("->Sistema: data correspondiente enviada");
+               this.out.close();
+               this.so.close();
+         }catch(IOException e){
+               this.ventana.setConsola("->Sistema ERROR: "+e.getMessage());
+         }
+    }
+
     //METODO RUN
     @Override
     public void run(){
@@ -63,22 +82,24 @@ public class Server implements Runnable {
           File archivo = new File(data);
 
           if(archivo.exists()){
-               this.ventana.setConsola("Existe");
+               this.ventana.setConsola("->Sistema: archivo Existente, enviado data...");
 
                try {
                     FileInputStream archivodata = new FileInputStream(archivo);
 
-                    this.out = new DataOutputStream(so.getOutputStream());
+                    enviar(archivodata.readAllBytes());
 
-                    this.out.write(archivodata.readAllBytes());
-
-                    this.out.close();
-                    this.so.close();
+                    archivodata.close();
                } catch (IOException e) {
-                    e.printStackTrace();
+                    this.ventana.setConsola("->Sistema ERROR: "+e.getMessage());/*EN CASO DE ERROR*/
                }
 
 
+          }else{
+
+               this.ventana.setConsola("->Archivo no existente...");
+               this.ventana.setConsola("->Se enviará un dato nulo");
+               enviar(null);
           }
 
     }

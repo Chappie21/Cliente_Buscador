@@ -10,6 +10,6 @@ public class Ctext extends JTextField{
 		this.setOpaque(false);
 		PlaceHolder placeholder = new PlaceHolder(this, mensaje);/*MENSAJE TRASLUCIDO*/
 		placeholder.setFont("Arial");
-		placeholder.setSize(20);
+		placeholder.setSize(18);
 	}
 }
